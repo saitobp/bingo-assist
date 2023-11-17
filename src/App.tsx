@@ -83,18 +83,70 @@ export function App() {
 
           setDrawNumbers([...drawNumbers, Number(drawNumber)])
 
-          setCards((prevCards) => {
-            return prevCards.map((card) => {
-              const updatedNumbers = card.numbers.map((row) => {
-                return row.map((number) => {
-                  if (number.number === Number(drawNumber)) {
-                    return { ...number, checked: true }
-                  }
-                  return number
-                })
+          const newCards = cards.map((card) => {
+            const updatedNumbers = card.numbers.map((row) => {
+              return row.map((number) => {
+                if (number.number === Number(drawNumber)) {
+                  return { ...number, checked: true }
+                }
+                return number
               })
-              return { ...card, numbers: updatedNumbers }
             })
+            return { ...card, numbers: updatedNumbers }
+          })
+
+          setCards(newCards)
+
+          newCards.forEach((card) => {
+            // Check rows
+            card.numbers.forEach((row) => {
+              if (row.every((number) => number.checked)) {
+                console.log('Win row')
+              }
+            })
+
+            // Check columns
+            for (let i = 0; i < card.numbers.length; i++) {
+              if (card.numbers.every((row) => row[i].checked)) {
+                console.log('Win column')
+              }
+            }
+
+            // Check corners
+            if (
+              card.numbers[0][0].checked &&
+              card.numbers[0][4].checked &&
+              card.numbers[4][0].checked &&
+              card.numbers[4][4].checked
+            ) {
+              console.log('Win corners')
+            }
+
+            // Check diagonals
+            if (
+              card.numbers[0][0].checked &&
+              card.numbers[1][1].checked &&
+              card.numbers[3][3].checked &&
+              card.numbers[4][4].checked
+            ) {
+              console.log('Win diagonal')
+            }
+
+            if (
+              card.numbers[0][4].checked &&
+              card.numbers[1][3].checked &&
+              card.numbers[3][1].checked &&
+              card.numbers[4][0].checked
+            ) {
+              console.log('Win diagonal')
+            }
+
+            // Win full card
+            if (
+              card.numbers.every((row) => row.every((number) => number.checked))
+            ) {
+              console.log('Win full card')
+            }
           })
         }}
       >
