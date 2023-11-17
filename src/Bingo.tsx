@@ -181,6 +181,7 @@ export function Bingo() {
 
       {cards.map((card) => (
         <div
+          data-testid={`bingo-card-${card.id}`}
           key={card.id}
           className='flex flex-col max-w-md border border-gray-200'
         >
@@ -214,6 +215,7 @@ export function Bingo() {
       ))}
 
       <button
+        data-testid='add-bingo-card'
         className='border border-gray-300'
         onClick={() => {
           console.log(newCard)
@@ -228,7 +230,16 @@ export function Bingo() {
       <h1>New Bingo Card</h1>
 
       <label htmlFor='card-id'>Card Id</label>
-      <input type='text' name='card-id' id='card-id' />
+      <input
+        type='text'
+        name='card-id'
+        id='card-id'
+        data-testid='card-id'
+        value={newCard.id}
+        onChange={(e) => {
+          setNewCard({ ...newCard, id: e.target.value })
+        }}
+      />
 
       <div className='flex flex-col max-w-md border border-gray-200'>
         <div className='flex flex-row justify-between w-full font-bold'>
