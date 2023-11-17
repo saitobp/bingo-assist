@@ -1,23 +1,61 @@
 import { useEffect, useState } from 'react'
 
+type BingoNumber = {
+  number: number
+  checked: boolean
+}
+
 type BingoCard = {
   id: string
-  numbers: number[][]
+  numbers: BingoNumber[][]
 }
 
 export function App() {
   const [newCard, setNewCard] = useState<BingoCard>({
     id: '',
     numbers: [
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
+      [
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+      ],
+      [
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+      ],
+      [
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+      ],
+      [
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+      ],
+      [
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+        { number: 0, checked: false },
+      ],
     ],
   })
 
   const [cards, setCards] = useState<BingoCard[]>([])
+
+  const [drawNumber, setDrawNumber] = useState('')
+  const [drawNumbers, setDrawNumbers] = useState<number[]>([])
 
   useEffect(() => {
     const savedCards = localStorage.getItem('cards')
@@ -29,9 +67,39 @@ export function App() {
   return (
     <>
       <label htmlFor='draw-number'>Draw number</label>
-      <input type='text' name='draw-number' id='draw-number' />
+      <input
+        type='text'
+        name='draw-number'
+        id='draw-number'
+        value={drawNumber}
+        onChange={(e) => {
+          setDrawNumber(e.target.value)
+        }}
+      />
 
-      <button>Save draw number</button>
+      <button
+        onClick={() => {
+          if (!drawNumber) return
+
+          setDrawNumbers([...drawNumbers, Number(drawNumber)])
+
+          setCards((prevCards) => {
+            return prevCards.map((card) => {
+              const updatedNumbers = card.numbers.map((row) => {
+                return row.map((number) => {
+                  if (number.number === Number(drawNumber)) {
+                    return { ...number, checked: true }
+                  }
+                  return number
+                })
+              })
+              return { ...card, numbers: updatedNumbers }
+            })
+          })
+        }}
+      >
+        Save draw number
+      </button>
 
       <button
         onClick={() => {
@@ -48,6 +116,14 @@ export function App() {
       >
         Clear local storage
       </button>
+
+      <h1>Draw numbers</h1>
+
+      <div>
+        {drawNumbers.map((number) => (
+          <span key={`draw-number-${number}`}>{number}</span>
+        ))}
+      </div>
 
       <h1>Saved Cards</h1>
 
@@ -74,9 +150,10 @@ export function App() {
               {row.map((col, j) => (
                 <div
                   key={`col-${j}`}
-                  className='w-8 text-center border border-gray-300'
+                  className={`w-8 text-center border border-gray-300 ${col.checked ? 'bg-green-200' : ''
+                    }`}
                 >
-                  {col}
+                  {col.number}
                 </div>
               ))}
             </div>
@@ -120,11 +197,11 @@ export function App() {
                 key={`col-${j}`}
                 type='text'
                 className='w-8 text-center border border-gray-300'
-                value={newCard.numbers[i][j]}
+                value={newCard.numbers[i][j].number}
                 disabled={i === 2 && j === 2}
                 onChange={(e) => {
                   const newNumbers = [...newCard.numbers]
-                  newNumbers[i][j] = Number(e.target.value)
+                  newNumbers[i][j].number = Number(e.target.value)
                   setNewCard({ ...newCard, numbers: newNumbers })
                 }}
               />
