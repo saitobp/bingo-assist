@@ -66,45 +66,21 @@ export function App() {
             <div>O</div>
           </div>
 
-          <div className='flex flex-row justify-between w-full'>
-            <div>{card.numbers[0][0]}</div>
-            <div>{card.numbers[0][1]}</div>
-            <div>3</div>
-            <div>4</div>
-            <div>15</div>
-          </div>
-
-          <div className='flex flex-row justify-between w-full'>
-            <div>16</div>
-            <div>17</div>
-            <div>18</div>
-            <div>19</div>
-            <div>30</div>
-          </div>
-
-          <div className='flex flex-row justify-between w-full'>
-            <div>16</div>
-            <div>17</div>
-            <div>18</div>
-            <div>19</div>
-            <div>30</div>
-          </div>
-
-          <div className='flex flex-row justify-between w-full'>
-            <div>16</div>
-            <div>17</div>
-            <div>18</div>
-            <div>19</div>
-            <div>30</div>
-          </div>
-
-          <div className='flex flex-row justify-between w-full'>
-            <div>16</div>
-            <div>17</div>
-            <div>18</div>
-            <div>19</div>
-            <div>30</div>
-          </div>
+          {card.numbers.map((row, i) => (
+            <div
+              key={`row-${i}`}
+              className='flex flex-row justify-between w-full'
+            >
+              {row.map((col, j) => (
+                <div
+                  key={`col-${j}`}
+                  className='w-8 text-center border border-gray-300'
+                >
+                  {col}
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       ))}
 
@@ -112,7 +88,9 @@ export function App() {
         className='border border-gray-300'
         onClick={() => {
           console.log(newCard)
-          setCards([...cards, newCard])
+
+          const newCards = [...cards, { ...newCard }]
+          setCards(JSON.parse(JSON.stringify(newCards)))
         }}
       >
         Add bingo card
@@ -132,16 +110,18 @@ export function App() {
           <div className='w-8 text-center'>O</div>
         </div>
 
-        {new Array(5).fill(0).map((_, i) => (
+        {newCard.numbers.map((row, i) => (
           <div
             key={`row-${i}`}
             className='flex flex-row justify-between w-full'
           >
-            {new Array(5).fill(0).map((_, j) => (
+            {row.map((_, j) => (
               <input
                 key={`col-${j}`}
                 type='text'
                 className='w-8 text-center border border-gray-300'
+                value={newCard.numbers[i][j]}
+                disabled={i === 2 && j === 2}
                 onChange={(e) => {
                   const newNumbers = [...newCard.numbers]
                   newNumbers[i][j] = Number(e.target.value)
