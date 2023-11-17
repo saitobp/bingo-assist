@@ -10,7 +10,7 @@ type BingoCard = {
   numbers: BingoNumber[][]
 }
 
-export function App() {
+export function Bingo() {
   const [newCard, setNewCard] = useState<BingoCard>({
     id: '',
     numbers: [
