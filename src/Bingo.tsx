@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 type BingoNumber = {
-  number: number
+  number: string
   checked: boolean
 }
 
@@ -10,52 +10,54 @@ type BingoCard = {
   numbers: BingoNumber[][]
 }
 
-export function Bingo() {
-  const [newCard, setNewCard] = useState<BingoCard>({
-    id: '',
-    numbers: [
-      [
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-      ],
-      [
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-      ],
-      [
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-      ],
-      [
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-      ],
-      [
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-        { number: 0, checked: false },
-      ],
+const initialCard: BingoCard = {
+  id: '',
+  numbers: [
+    [
+      { number: '', checked: false },
+      { number: '', checked: false },
+      { number: '', checked: false },
+      { number: '', checked: false },
+      { number: '', checked: false },
     ],
-  })
+    [
+      { number: '', checked: false },
+      { number: '', checked: false },
+      { number: '', checked: false },
+      { number: '', checked: false },
+      { number: '', checked: false },
+    ],
+    [
+      { number: '', checked: false },
+      { number: '', checked: false },
+      { number: '', checked: false },
+      { number: '', checked: false },
+      { number: '', checked: false },
+    ],
+    [
+      { number: '', checked: false },
+      { number: '', checked: false },
+      { number: '', checked: false },
+      { number: '', checked: false },
+      { number: '', checked: false },
+    ],
+    [
+      { number: '', checked: false },
+      { number: '', checked: false },
+      { number: '', checked: false },
+      { number: '', checked: false },
+      { number: '', checked: false },
+    ],
+  ],
+}
+
+export function Bingo() {
+  const [newCard, setNewCard] = useState<BingoCard>(initialCard)
 
   const [cards, setCards] = useState<BingoCard[]>([])
 
-  const [drawNumber, setDrawNumber] = useState('')
-  const [drawNumbers, setDrawNumbers] = useState<number[]>([])
+  const [drawnNumber, setDrawnNumber] = useState('')
+  const [drawnNumbers, setDrawnNumbers] = useState<number[]>([])
 
   useEffect(() => {
     const savedCards = localStorage.getItem('cards')
@@ -66,27 +68,34 @@ export function Bingo() {
 
   return (
     <>
-      <label htmlFor='draw-number'>Draw number</label>
+      <h1 className='font-bold text-xl'>Bingo Assist</h1>
+
+      <h2>Win: None</h2>
+
+      <label htmlFor='drawn-number'>Drawn number</label>
       <input
+        role='textbox'
         type='text'
-        name='draw-number'
-        id='draw-number'
-        value={drawNumber}
+        name='drawn-number'
+        id='drawn-number'
+        value={drawnNumber}
         onChange={(e) => {
-          setDrawNumber(e.target.value)
+          setDrawnNumber(e.target.value)
         }}
       />
 
       <button
         onClick={() => {
-          if (!drawNumber) return
+          if (!drawnNumber) return
 
-          setDrawNumbers([...drawNumbers, Number(drawNumber)])
+          setDrawnNumber('')
+
+          setDrawnNumbers([...drawnNumbers, Number(drawnNumber)])
 
           const newCards = cards.map((card) => {
             const updatedNumbers = card.numbers.map((row) => {
               return row.map((number) => {
-                if (number.number === Number(drawNumber)) {
+                if (number.number === drawnNumber) {
                   return { ...number, checked: true }
                 }
                 return number
@@ -150,7 +159,7 @@ export function Bingo() {
           })
         }}
       >
-        Save draw number
+        Save drawn number
       </button>
 
       <button
@@ -172,8 +181,14 @@ export function Bingo() {
       <h1>Draw numbers</h1>
 
       <div>
-        {drawNumbers.map((number) => (
-          <span key={`draw-number-${number}`}>{number}</span>
+        {drawnNumbers.sort().map((number, i) => (
+          <span
+            role='list-item'
+            aria-label={`Drawn numbers list item ${i + 1}`}
+            key={`draw-number-${number}`}
+          >
+            {number}
+          </span>
         ))}
       </div>
 
@@ -181,11 +196,12 @@ export function Bingo() {
 
       {cards.map((card) => (
         <div
-          data-testid={`bingo-card-${card.id}`}
+          role='listitem'
+          aria-label={`Card ${card.id}`}
           key={card.id}
           className='flex flex-col max-w-md border border-gray-200'
         >
-          <div>Id: {card.id}</div>
+          <div aria-label={`Card id ${card.id}`}>Id: {card.id}</div>
 
           <div className='flex flex-row justify-between w-full font-bold'>
             <div>B</div>
@@ -202,6 +218,7 @@ export function Bingo() {
             >
               {row.map((col, j) => (
                 <div
+                  aria-label={`Card ${card.id} number col ${j} row ${i}`}
                   key={`col-${j}`}
                   className={`w-8 text-center border border-gray-300 ${col.checked ? 'bg-green-200' : ''
                     }`}
@@ -215,26 +232,66 @@ export function Bingo() {
       ))}
 
       <button
-        data-testid='add-bingo-card'
         className='border border-gray-300'
         onClick={() => {
-          console.log(newCard)
-
           const newCards = [...cards, { ...newCard }]
           setCards(JSON.parse(JSON.stringify(newCards)))
+
+          // Clear the new card
+          setNewCard({
+            id: '',
+            numbers: [
+              [
+                { number: '', checked: false },
+                { number: '', checked: false },
+                { number: '', checked: false },
+                { number: '', checked: false },
+                { number: '', checked: false },
+              ],
+              [
+                { number: '', checked: false },
+                { number: '', checked: false },
+                { number: '', checked: false },
+                { number: '', checked: false },
+                { number: '', checked: false },
+              ],
+              [
+                { number: '', checked: false },
+                { number: '', checked: false },
+                { number: '', checked: false },
+                { number: '', checked: false },
+                { number: '', checked: false },
+              ],
+              [
+                { number: '', checked: false },
+                { number: '', checked: false },
+                { number: '', checked: false },
+                { number: '', checked: false },
+                { number: '', checked: false },
+              ],
+              [
+                { number: '', checked: false },
+                { number: '', checked: false },
+                { number: '', checked: false },
+                { number: '', checked: false },
+                { number: '', checked: false },
+              ],
+            ],
+          })
         }}
       >
         Add bingo card
       </button>
 
-      <h1>New Bingo Card</h1>
+      <h1 className='font-bold text-lg'>New Bingo Card</h1>
 
-      <label htmlFor='card-id'>Card Id</label>
+      <label htmlFor='new-card-id'>New card id</label>
       <input
+        aria-label='New card id'
+        role='textbox'
         type='text'
-        name='card-id'
-        id='card-id'
-        data-testid='card-id'
+        name='new-card-id'
+        id='new-card-id'
         value={newCard.id}
         onChange={(e) => {
           setNewCard({ ...newCard, id: e.target.value })
@@ -252,11 +309,14 @@ export function Bingo() {
 
         {newCard.numbers.map((row, i) => (
           <div
-            key={`row-${i}`}
+            key={`row-${i}}`}
             className='flex flex-row justify-between w-full'
           >
             {row.map((_, j) => (
               <input
+                aria-label={`New card number col ${i} row ${j}`}
+                role='textbox'
+                name={`new-card-number-input-${i}-${j}`}
                 key={`col-${j}`}
                 type='text'
                 className='w-8 text-center border border-gray-300'
@@ -264,7 +324,7 @@ export function Bingo() {
                 disabled={i === 2 && j === 2}
                 onChange={(e) => {
                   const newNumbers = [...newCard.numbers]
-                  newNumbers[i][j].number = Number(e.target.value)
+                  newNumbers[i][j].number = e.target.value
                   setNewCard({ ...newCard, numbers: newNumbers })
                 }}
               />
