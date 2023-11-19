@@ -1,16 +1,8 @@
+import { BingoCardConfig } from '@/types/bingoTypes'
 import { useEffect, useState } from 'react'
+import { BingoCard } from './components/BingoCard'
 
-type BingoNumber = {
-  number: string
-  checked: boolean
-}
-
-type BingoCard = {
-  id: string
-  numbers: BingoNumber[][]
-}
-
-const initialCard: BingoCard = {
+const initialCard: BingoCardConfig = {
   id: '',
   numbers: [
     [
@@ -52,9 +44,8 @@ const initialCard: BingoCard = {
 }
 
 export function Bingo() {
-  const [newCard, setNewCard] = useState<BingoCard>(initialCard)
-
-  const [cards, setCards] = useState<BingoCard[]>([])
+  const [newCard, setNewCard] = useState<BingoCardConfig>(initialCard)
+  const [cards, setCards] = useState<BingoCardConfig[]>([])
 
   const [drawnNumber, setDrawnNumber] = useState('')
   const [drawnNumbers, setDrawnNumbers] = useState<number[]>([])
@@ -67,8 +58,8 @@ export function Bingo() {
   }, [])
 
   return (
-    <>
-      <h1 className='font-bold text-xl'>Bingo Assist</h1>
+    <div className='p-4'>
+      <h1 className='text-xl font-bold'>Bingo Assist</h1>
 
       <h2>Win: None</h2>
 
@@ -195,40 +186,7 @@ export function Bingo() {
       <h1>Saved Cards</h1>
 
       {cards.map((card) => (
-        <div
-          role='listitem'
-          aria-label={`Card ${card.id}`}
-          key={card.id}
-          className='flex flex-col max-w-md border border-gray-200'
-        >
-          <div aria-label={`Card id ${card.id}`}>Id: {card.id}</div>
-
-          <div className='flex flex-row justify-between w-full font-bold'>
-            <div>B</div>
-            <div>I</div>
-            <div>N</div>
-            <div>G</div>
-            <div>O</div>
-          </div>
-
-          {card.numbers.map((row, i) => (
-            <div
-              key={`row-${i}`}
-              className='flex flex-row justify-between w-full'
-            >
-              {row.map((col, j) => (
-                <div
-                  aria-label={`Card ${card.id} number col ${j} row ${i}`}
-                  key={`col-${j}`}
-                  className={`w-8 text-center border border-gray-300 ${col.checked ? 'bg-green-200' : ''
-                    }`}
-                >
-                  {col.number}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
+        <BingoCard card={card} />
       ))}
 
       <button
@@ -283,7 +241,7 @@ export function Bingo() {
         Add bingo card
       </button>
 
-      <h1 className='font-bold text-lg'>New Bingo Card</h1>
+      <h1 className='text-lg font-bold'>New Bingo Card</h1>
 
       <label htmlFor='new-card-id'>New card id</label>
       <input
@@ -298,8 +256,8 @@ export function Bingo() {
         }}
       />
 
-      <div className='flex flex-col max-w-md border border-gray-200'>
-        <div className='flex flex-row justify-between w-full font-bold'>
+      <div className='flex max-w-md flex-col border border-gray-200'>
+        <div className='flex w-full flex-row justify-between font-bold'>
           <div className='w-8 text-center'>B</div>
           <div className='w-8 text-center'>I</div>
           <div className='w-8 text-center'>N</div>
@@ -310,7 +268,7 @@ export function Bingo() {
         {newCard.numbers.map((row, i) => (
           <div
             key={`row-${i}}`}
-            className='flex flex-row justify-between w-full'
+            className='flex w-full flex-row justify-between'
           >
             {row.map((_, j) => (
               <input
@@ -319,7 +277,7 @@ export function Bingo() {
                 name={`new-card-number-input-${i}-${j}`}
                 key={`col-${j}`}
                 type='text'
-                className='w-8 text-center border border-gray-300'
+                className='w-8 border border-gray-300 text-center'
                 value={newCard.numbers[i][j].number}
                 disabled={i === 2 && j === 2}
                 onChange={(e) => {
@@ -332,6 +290,6 @@ export function Bingo() {
           </div>
         ))}
       </div>
-    </>
+    </div>
   )
 }
