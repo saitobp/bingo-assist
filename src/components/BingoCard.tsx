@@ -11,7 +11,7 @@ export function BingoCard(props: BingoCardProps) {
       role='listitem'
       aria-label={`Card ${props.card.id}`}
       key={props.card.id}
-      className='my-2 flex  w-64 flex-col rounded-md border border-gray-300 bg-gray-50 px-4 py-2 shadow-md'
+      className=' flex  w-64 flex-col rounded-md border border-gray-300 bg-gray-50 px-4 py-2 shadow-md'
     >
       <div
         className='mb-2 w-full border-b-2 border-gray-200 pb-2 text-sm font-medium text-gray-400'

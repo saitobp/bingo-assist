@@ -5,9 +5,9 @@ function createHelper(page: Page) {
     await page.goto('http://localhost:5173/')
   }
 
-  async function fillNewCardId() {
+  async function fillNewCardId(id: string) {
     await page.getByLabel('New card id').click()
-    await page.getByLabel('New card id').fill('0001')
+    await page.getByLabel('New card id').fill(id)
     await page.getByLabel('New card id').press('Enter')
   }
 
@@ -60,7 +60,7 @@ test('Add a bingo card', async ({ page }) => {
   const helper = createHelper(page)
 
   await helper.goToHome()
-  await helper.fillNewCardId()
+  await helper.fillNewCardId('0001')
   await helper.fillNewCardNumbers()
 
   // Click the add new bingo card button
@@ -92,7 +92,7 @@ test('Add drawn numbers', async ({ page }) => {
   const helper = createHelper(page)
 
   await helper.goToHome()
-  await helper.fillNewCardId()
+  await helper.fillNewCardId('0001')
   await helper.fillNewCardNumbers()
 
   // Click the add new bingo card button
@@ -112,4 +112,23 @@ test('Add drawn numbers', async ({ page }) => {
 
   // Check to see if the drawn numbers container has the new drawn number ordered
   await expect(page.getByLabel('Drawn numbers list item 1')).toHaveText('1')
+})
+
+test('Add multiple bingo cards', async ({ page }) => {
+  const helper = createHelper(page)
+
+  await helper.goToHome()
+
+  for (let cardsCounter = 1; cardsCounter <= 5; cardsCounter++) {
+    const id = cardsCounter.toString().padStart(4, '0')
+    await helper.fillNewCardId(id)
+    await helper.fillNewCardNumbers()
+
+    // Click the add new bingo card button
+    await page.getByRole('button', { name: 'Add bingo card' }).click()
+
+    // Check to see if the bingo card was created
+    await expect(page.getByLabel(`Card ${id}`, { exact: true })).toBeVisible()
+    await expect(page.getByLabel(`Card id ${id}`)).toHaveText(`Id: ${id}`)
+  }
 })

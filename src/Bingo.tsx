@@ -185,9 +185,11 @@ export function Bingo() {
 
       <h1>Saved Cards</h1>
 
-      {cards.map((card) => (
-        <BingoCard card={card} />
-      ))}
+      <div className='flex flex-wrap justify-center gap-4'>
+        {cards.map((card) => (
+          <BingoCard card={card} />
+        ))}
+      </div>
 
       <button
         className='border border-gray-300'
