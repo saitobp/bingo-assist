@@ -1,6 +1,9 @@
+import { BingoCard } from '@/components/BingoCard'
+import { DrawnNumbers } from '@/components/DrawnNumbers'
+import { WinnerCardIndicator } from '@/components/WinnerCardIndicator'
+import { useBingoStore } from '@/store/bingoStore'
 import { BingoCardConfig } from '@/types/bingoTypes'
 import { useEffect, useState } from 'react'
-import { BingoCard } from './components/BingoCard'
 
 const initialCard: BingoCardConfig = {
   id: '',
@@ -48,7 +51,6 @@ export function Bingo() {
   const [cards, setCards] = useState<BingoCardConfig[]>([])
 
   const [drawnNumber, setDrawnNumber] = useState('')
-  const [drawnNumbers, setDrawnNumbers] = useState<number[]>([])
 
   useEffect(() => {
     const savedCards = localStorage.getItem('cards')
@@ -61,7 +63,7 @@ export function Bingo() {
     <div className='p-4'>
       <h1 className='text-xl font-bold'>Bingo Assist</h1>
 
-      <h2>Win: None</h2>
+      <WinnerCardIndicator />
 
       <label htmlFor='drawn-number'>Drawn number</label>
       <input
@@ -78,10 +80,13 @@ export function Bingo() {
       <button
         onClick={() => {
           if (!drawnNumber) return
+          const drawNumbers = useBingoStore.getState().drawnNumbers
 
           setDrawnNumber('')
 
-          setDrawnNumbers([...drawnNumbers, Number(drawnNumber)])
+          useBingoStore.setState({
+            drawnNumbers: [...drawNumbers, Number(drawnNumber)],
+          })
 
           const newCards = cards.map((card) => {
             const updatedNumbers = card.numbers.map((row) => {
@@ -101,14 +106,18 @@ export function Bingo() {
             // Check rows
             card.numbers.forEach((row) => {
               if (row.every((number) => number.checked)) {
-                console.log('Win row')
+                useBingoStore.setState({
+                  winnerCard: { ...card, type: 'row' },
+                })
               }
             })
 
             // Check columns
             for (let i = 0; i < card.numbers.length; i++) {
               if (card.numbers.every((row) => row[i].checked)) {
-                console.log('Win column')
+                useBingoStore.setState({
+                  winnerCard: { ...card, type: 'column' },
+                })
               }
             }
 
@@ -119,7 +128,9 @@ export function Bingo() {
               card.numbers[4][0].checked &&
               card.numbers[4][4].checked
             ) {
-              console.log('Win corners')
+              useBingoStore.setState({
+                winnerCard: { ...card, type: 'corners' },
+              })
             }
 
             // Check diagonals
@@ -129,7 +140,9 @@ export function Bingo() {
               card.numbers[3][3].checked &&
               card.numbers[4][4].checked
             ) {
-              console.log('Win diagonal')
+              useBingoStore.setState({
+                winnerCard: { ...card, type: 'diagonal' },
+              })
             }
 
             if (
@@ -138,14 +151,18 @@ export function Bingo() {
               card.numbers[3][1].checked &&
               card.numbers[4][0].checked
             ) {
-              console.log('Win diagonal')
+              useBingoStore.setState({
+                winnerCard: { ...card, type: 'diagonal' },
+              })
             }
 
             // Win full card
             if (
               card.numbers.every((row) => row.every((number) => number.checked))
             ) {
-              console.log('Win full card')
+              useBingoStore.setState({
+                winnerCard: { ...card, type: 'full-card' },
+              })
             }
           })
         }}
@@ -169,25 +186,13 @@ export function Bingo() {
         Clear local storage
       </button>
 
-      <h1>Draw numbers</h1>
-
-      <div>
-        {drawnNumbers.sort().map((number, i) => (
-          <span
-            role='list-item'
-            aria-label={`Drawn numbers list item ${i + 1}`}
-            key={`draw-number-${number}`}
-          >
-            {number}
-          </span>
-        ))}
-      </div>
+      <DrawnNumbers />
 
       <h1>Saved Cards</h1>
 
       <div className='flex flex-wrap justify-center gap-4'>
         {cards.map((card) => (
-          <BingoCard card={card} />
+          <BingoCard key={card.id} card={card} />
         ))}
       </div>
 

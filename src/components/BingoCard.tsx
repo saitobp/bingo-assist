@@ -10,7 +10,6 @@ export function BingoCard(props: BingoCardProps) {
     <div
       role='listitem'
       aria-label={`Card ${props.card.id}`}
-      key={props.card.id}
       className=' flex  w-64 flex-col rounded-md border border-gray-300 bg-gray-50 px-4 py-2 shadow-md'
     >
       <div
@@ -30,13 +29,16 @@ export function BingoCard(props: BingoCardProps) {
 
       {props.card.numbers.map((row, i) => (
         <div
-          key={`row-${i}`}
+          key={`card-${props.card.id}-row-${i}`}
           className='mb-2 flex w-full flex-row justify-between'
         >
           {row.map((col, j) => {
             if (i === 2 && j === 2) {
               return (
-                <div className='flex h-8 w-8 items-center justify-center rounded-full text-center text-gray-600'>
+                <div
+                  key={`card-${props.card.id}-col-${j}-row-${i}`}
+                  className='flex h-8 w-8 items-center justify-center rounded-full text-center text-gray-600'
+                >
                   ⚙️
                 </div>
               )
@@ -44,7 +46,7 @@ export function BingoCard(props: BingoCardProps) {
             return (
               <div
                 aria-label={`Card ${props.card.id} number col ${j} row ${i}`}
-                key={`col-${j}`}
+                key={`card-${props.card.id}-col-${j}-row-${i}`}
                 className={clsx(
                   'flex h-8 w-8 items-center justify-center rounded-full text-center text-gray-600',
                   {

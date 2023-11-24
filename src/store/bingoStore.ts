@@ -1,12 +1,12 @@
-import { BingoCard } from '@/types/bingoTypes'
+import { BingoCardConfig, WinType } from '@/types/bingoTypes'
 import { create } from 'zustand'
 
 type BingoStore = {
-  // Populate with the defaults values for the new card
-  // before adding it to the list of cards
-  newCard: BingoCard
+  newCard: BingoCardConfig
+  setNewCard: (newCard: BingoCardConfig) => void
 
-  setNewCard: (newCard: BingoCard) => void
+  drawnNumbers: number[]
+  winnerCard: (BingoCardConfig & { type: WinType }) | null
 }
 
 export const useBingoStore = create<BingoStore>((set) => ({
@@ -50,6 +50,8 @@ export const useBingoStore = create<BingoStore>((set) => ({
       ],
     ],
   },
-
   setNewCard: (newCard) => set({ newCard }),
+
+  drawnNumbers: [],
+  winnerCard: null,
 }))
