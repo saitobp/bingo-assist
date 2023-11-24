@@ -91,7 +91,7 @@ export function Bingo() {
           const newCards = cards.map((card) => {
             const updatedNumbers = card.numbers.map((row) => {
               return row.map((number) => {
-                if (number.number === drawnNumber) {
+                if (number.number === drawnNumber || number.number === '') {
                   return { ...number, checked: true }
                 }
                 return number
@@ -102,7 +102,20 @@ export function Bingo() {
 
           setCards(newCards)
 
+          console.log(newCards)
+
           newCards.forEach((card) => {
+            // Win full card
+            if (
+              card.numbers.every((row) => row.every((number) => number.checked))
+            ) {
+              useBingoStore.setState({
+                winnerCard: { ...card, type: 'full-card' },
+              })
+
+              return
+            }
+
             // Check rows
             card.numbers.forEach((row) => {
               if (row.every((number) => number.checked)) {
@@ -153,15 +166,6 @@ export function Bingo() {
             ) {
               useBingoStore.setState({
                 winnerCard: { ...card, type: 'diagonal' },
-              })
-            }
-
-            // Win full card
-            if (
-              card.numbers.every((row) => row.every((number) => number.checked))
-            ) {
-              useBingoStore.setState({
-                winnerCard: { ...card, type: 'full-card' },
               })
             }
           })
@@ -223,7 +227,7 @@ export function Bingo() {
               [
                 { number: '', checked: false },
                 { number: '', checked: false },
-                { number: '', checked: false },
+                { number: '', checked: true },
                 { number: '', checked: false },
                 { number: '', checked: false },
               ],

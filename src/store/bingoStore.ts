@@ -30,7 +30,7 @@ export const useBingoStore = create<BingoStore>((set) => ({
       [
         { number: '', checked: false },
         { number: '', checked: false },
-        { number: '', checked: false },
+        { number: '', checked: true },
         { number: '', checked: false },
         { number: '', checked: false },
       ],

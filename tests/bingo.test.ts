@@ -143,4 +143,156 @@ test('Horizontal bingo', async ({ page }) => {
   await expect(page.getByLabel('Win status')).toHaveText(
     'Win: 0001 - Horizontal',
   )
+
+  await expect(page.getByLabel('Card 0001 number col 0 row 0')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 1 row 0')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 2 row 0')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 3 row 0')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 4 row 0')).toHaveClass(
+    /bg-green-200/,
+  )
+})
+
+test('Vertical bingo', async ({ page }) => {
+  const helper = createHelper(page)
+
+  await helper.goToHome()
+  await helper.createBingoCard('0001')
+  await helper.drawnNumbers([1, 2, 3, 4, 5])
+
+  await expect(page.getByLabel('Win status')).toHaveText('Win: 0001 - Vertical')
+
+  await expect(page.getByLabel('Card 0001 number col 0 row 0')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 0 row 1')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 0 row 2')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 0 row 3')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 0 row 4')).toHaveClass(
+    /bg-green-200/,
+  )
+})
+
+test('Diagonal bingo', async ({ page }) => {
+  const helper = createHelper(page)
+
+  await helper.goToHome()
+  await helper.createBingoCard('0001')
+  await helper.drawnNumbers([1, 7, 13, 19, 25])
+
+  await expect(page.getByLabel('Win status')).toHaveText('Win: 0001 - Diagonal')
+
+  await expect(page.getByLabel('Card 0001 number col 0 row 0')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 1 row 1')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 3 row 3')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 4 row 4')).toHaveClass(
+    /bg-green-200/,
+  )
+})
+
+test('Reverse diagonal bingo', async ({ page }) => {
+  const helper = createHelper(page)
+
+  await helper.goToHome()
+  await helper.createBingoCard('0001')
+  await helper.drawnNumbers([5, 9, 13, 17, 21])
+
+  await expect(page.getByLabel('Win status')).toHaveText('Win: 0001 - Diagonal')
+
+  await expect(page.getByLabel('Card 0001 number col 0 row 4')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 1 row 3')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 3 row 1')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 4 row 0')).toHaveClass(
+    /bg-green-200/,
+  )
+})
+
+test('Corners bingo', async ({ page }) => {
+  const helper = createHelper(page)
+
+  await helper.goToHome()
+  await helper.createBingoCard('0001')
+  await helper.drawnNumbers([1, 5, 21, 25])
+
+  await expect(page.getByLabel('Win status')).toHaveText('Win: 0001 - Corners')
+
+  await expect(page.getByLabel('Card 0001 number col 0 row 0')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 0 row 4')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 4 row 0')).toHaveClass(
+    /bg-green-200/,
+  )
+
+  await expect(page.getByLabel('Card 0001 number col 4 row 4')).toHaveClass(
+    /bg-green-200/,
+  )
+})
+
+test('Full bingo', async ({ page }) => {
+  const helper = createHelper(page)
+
+  await helper.goToHome()
+  await helper.createBingoCard('0001')
+  await helper.drawnNumbers([
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+    22, 23, 24, 25,
+  ])
+
+  await expect(page.getByLabel('Win status')).toHaveText('Win: 0001 - Full')
+
+  // Check to see if all the bingo card numbers are green
+  for (let i = 0; i < 5; i++) {
+    for (let j = 0; j < 5; j++) {
+      if (i === 2 && j === 2) continue
+
+      await expect(
+        page.getByLabel(`Card 0001 number col ${j} row ${i}`),
+      ).toHaveClass(/bg-green-200/)
+    }
+  }
 })

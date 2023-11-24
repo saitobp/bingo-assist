@@ -11,7 +11,7 @@ export function DrawnNumbers() {
         Draw numbers
       </Title>
 
-      <div className='mt-2 flex w-full max-w-md justify-center'>
+      <div className='mt-2 flex w-full max-w-md flex-wrap justify-center'>
         {sortedNumbers.map((number, i) => (
           <span
             role='list-item'

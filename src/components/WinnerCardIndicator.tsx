@@ -9,6 +9,10 @@ export function WinnerCardIndicator() {
       return 'None'
     }
 
+    if (winnerCard.type === 'full-card') {
+      return `${winnerCard.id} - Full`
+    }
+
     if (winnerCard.type === 'column') {
       return `${winnerCard.id} - Vertical`
     }
@@ -23,10 +27,6 @@ export function WinnerCardIndicator() {
 
     if (winnerCard.type === 'corners') {
       return `${winnerCard.id} - Corners`
-    }
-
-    if (winnerCard.type === 'full-card') {
-      return `${winnerCard.id} - Full`
     }
 
     return 'Error'
