@@ -1,27 +1,23 @@
-# React + TypeScript + Vite
+# Bingo Assist
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Is a small webapp that helps you play bingo with your friends.
 
-Currently, two official plugins are available:
+## How to use
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Add the bingo cards you want to play with.
+2. When a number is drawn, add it on the input field and save it.
+3. If you have a bingo, the card will be marked as bingo.
 
-## Expanding the ESLint configuration
+## How to run
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+1. Clone the repo
+2. Run `yarn`
+3. Run `yarn dev`
 
-- Configure the top-level `parserOptions` property like this:
+## How to test
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+1. Run `yarn test`
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Disclaimer
+
+This is a small project that I made to play with friends and family, the style is not the best and the code is not the cleanest, but it works.
