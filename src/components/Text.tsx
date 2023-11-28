@@ -1,15 +1,18 @@
 import clsx from 'clsx'
 import { ComponentProps, ReactNode } from 'react'
 
-type TitleProps = { children: ReactNode } & (
+type TextProps = { children: ReactNode } & (
   | ({ size: 'lg' } & ComponentProps<'h1'>)
   | ({ size: 'md' } & ComponentProps<'h2'>)
 )
 
-export function Title(props: TitleProps) {
+export function Text(props: TextProps) {
   if (props.size === 'lg') {
     return (
-      <h1 {...props} className={clsx(props.className, 'text-gray-600')}>
+      <h1
+        {...props}
+        className={clsx(props.className, 'text-lg font-bold text-gray-600')}
+      >
         {props.children}
       </h1>
     )
@@ -26,7 +29,7 @@ export function Title(props: TitleProps) {
     )
   }
 
-  console.error('Invalid title size')
+  console.error('Invalid text size')
 
   return null
 }

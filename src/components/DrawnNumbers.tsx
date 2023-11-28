@@ -1,5 +1,5 @@
 import { useBingoStore } from '@/store/bingoStore'
-import { Title } from './Title'
+import { Text } from './Text'
 
 export function DrawnNumbers() {
   const drawnNumbers = useBingoStore((state) => state.drawnNumbers)
@@ -7,9 +7,9 @@ export function DrawnNumbers() {
 
   return (
     <div className='flex w-full flex-col items-center'>
-      <Title size='md' className='w-full text-center'>
+      <Text size='md' className='w-full text-center'>
         Draw numbers
-      </Title>
+      </Text>
 
       <div className='mt-2 flex w-full max-w-md flex-wrap justify-center'>
         {sortedNumbers.map((number, i) => (

@@ -12,6 +12,7 @@ type BingoStore = {
 export const useBingoStore = create<BingoStore>((set) => ({
   newCard: {
     id: '',
+    win: false,
     numbers: [
       [
         { number: '', checked: false },

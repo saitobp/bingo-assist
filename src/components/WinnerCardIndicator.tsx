@@ -1,5 +1,5 @@
 import { useBingoStore } from '@/store/bingoStore'
-import { Title } from './Title'
+import { Text } from './Text'
 
 export function WinnerCardIndicator() {
   const winnerCard = useBingoStore((state) => state.winnerCard)
@@ -33,8 +33,8 @@ export function WinnerCardIndicator() {
   }
 
   return (
-    <Title size='md' aria-label='Win status' className='w-full text-center'>
+    <Text size='md' aria-label='Win status' className='mt-2 w-full text-center'>
       Win: <span className='font-normal'>{handleWinStatus()}</span>
-    </Title>
+    </Text>
   )
 }
