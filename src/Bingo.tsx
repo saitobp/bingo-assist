@@ -1,59 +1,16 @@
 import { BingoCard } from '@/components/BingoCard'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/button'
 import { DrawnNumbers } from '@/components/DrawnNumbers'
-import { Input } from '@/components/Input'
 import { Text } from '@/components/Text'
 import { WinnerCardIndicator } from '@/components/WinnerCardIndicator'
 import { useBingoStore } from '@/store/bingoStore'
 import { BingoCardConfig } from '@/types/bingoTypes'
 import { useEffect, useState } from 'react'
 
-const initialCard: BingoCardConfig = {
-  id: '',
-  win: false,
-  numbers: [
-    [
-      { number: '', checked: false },
-      { number: '', checked: false },
-      { number: '', checked: false },
-      { number: '', checked: false },
-      { number: '', checked: false },
-    ],
-    [
-      { number: '', checked: false },
-      { number: '', checked: false },
-      { number: '', checked: false },
-      { number: '', checked: false },
-      { number: '', checked: false },
-    ],
-    [
-      { number: '', checked: false },
-      { number: '', checked: false },
-      { number: '', checked: false },
-      { number: '', checked: false },
-      { number: '', checked: false },
-    ],
-    [
-      { number: '', checked: false },
-      { number: '', checked: false },
-      { number: '', checked: false },
-      { number: '', checked: false },
-      { number: '', checked: false },
-    ],
-    [
-      { number: '', checked: false },
-      { number: '', checked: false },
-      { number: '', checked: false },
-      { number: '', checked: false },
-      { number: '', checked: false },
-    ],
-  ],
-}
-
 export function Bingo() {
-  const [newCard, setNewCard] = useState<BingoCardConfig>(initialCard)
   const [cards, setCards] = useState<BingoCardConfig[]>([])
   const [drawnNumber, setDrawnNumber] = useState('')
+  const [quickAdd, setQuickAdd] = useState('')
 
   useEffect(() => {
     const savedCards = localStorage.getItem('cards')
@@ -167,52 +124,34 @@ export function Bingo() {
     localStorage.clear()
   }
 
-  function addBingoCard() {
-    const newCards = [...cards, { ...newCard }]
-    setCards(JSON.parse(JSON.stringify(newCards)))
+  function handleQuickAdd() {
+    const name = quickAdd.split(',')[0]
+    const n = quickAdd
+      .split(',')
+      .slice(1)
+      .filter((v) => v !== '' && !isNaN(Number(v)))
+      .map((v) => ({ number: v.trim(), checked: false }))
 
-    // Clear the new card
-    setNewCard({
-      id: '',
+    if (n.length !== 24) {
+      alert('Invalid number of inputs')
+      return
+    }
+
+    const newCard = {
+      id: name,
       win: false,
       numbers: [
-        [
-          { number: '', checked: false },
-          { number: '', checked: false },
-          { number: '', checked: false },
-          { number: '', checked: false },
-          { number: '', checked: false },
-        ],
-        [
-          { number: '', checked: false },
-          { number: '', checked: false },
-          { number: '', checked: false },
-          { number: '', checked: false },
-          { number: '', checked: false },
-        ],
-        [
-          { number: '', checked: false },
-          { number: '', checked: false },
-          { number: '', checked: true },
-          { number: '', checked: false },
-          { number: '', checked: false },
-        ],
-        [
-          { number: '', checked: false },
-          { number: '', checked: false },
-          { number: '', checked: false },
-          { number: '', checked: false },
-          { number: '', checked: false },
-        ],
-        [
-          { number: '', checked: false },
-          { number: '', checked: false },
-          { number: '', checked: false },
-          { number: '', checked: false },
-          { number: '', checked: false },
-        ],
+        [n[0], n[1], n[2], n[3], n[4]],
+        [n[5], n[6], n[7], n[8], n[9]],
+        [n[10], n[11], { number: '', checked: true }, n[12], n[13]],
+        [n[14], n[15], n[16], n[17], n[18]],
+        [n[19], n[20], n[21], n[22], n[23]],
       ],
-    })
+    }
+
+    const newCards = [...cards, { ...newCard }]
+    setCards(JSON.parse(JSON.stringify(newCards)))
+    setQuickAdd('')
   }
 
   return (
@@ -221,16 +160,20 @@ export function Bingo() {
         Bingo Assist
       </Text>
 
-      <Input
-        label='Drawn number'
-        role='textbox'
-        type='text'
-        name='drawn-number'
-        id='drawn-number'
-        className='w-72'
-        value={drawnNumber}
-        onChange={(e) => setDrawnNumber(e.target.value)}
-      />
+      <div className='flex w-full flex-col gap-2'>
+        <label>Drawn Number</label>
+        <input
+          className='h-8 rounded-md p-2 text-neutral-800 shadow-md outline-neutral-300 placeholder:text-neutral-300 focus:outline-none'
+          placeholder='Add a new bingo card quickly'
+          value={quickAdd}
+          onChange={(e) => setDrawnNumber(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              saveDrawnNumber()
+            }
+          }}
+        />
+      </div>
 
       <div className='my-2 flex gap-4'>
         <Button onClick={saveDrawnNumber}>Save Drawn Number</Button>
@@ -251,59 +194,31 @@ export function Bingo() {
         ))}
       </div>
 
-      <Button onClick={addBingoCard} className='my-2'>
-        Add bingo card
-      </Button>
-
-      <Text size='md' className='w-full text-center'>
-        New Bingo Card
-      </Text>
-
-      <Input
-        label='New Card Id'
-        aria-label='New card id'
-        role='textbox'
-        type='text'
-        name='new-card-id'
-        id='new-card-id'
-        value={newCard.id}
-        className='mb-2'
-        onChange={(e) => setNewCard({ ...newCard, id: e.target.value })}
-      />
-
-      <div className='flex max-w-md flex-col border border-gray-200'>
-        <div className='flex w-full flex-row justify-between font-bold'>
-          <div className='w-8 text-center'>B</div>
-          <div className='w-8 text-center'>I</div>
-          <div className='w-8 text-center'>N</div>
-          <div className='w-8 text-center'>G</div>
-          <div className='w-8 text-center'>O</div>
+      <div className='mt-4 flex w-96 items-end gap-2'>
+        <div className='flex w-full flex-col gap-2'>
+          <label>Quick Add</label>
+          <input
+            className='h-8 rounded-md p-2 text-neutral-800 shadow-md outline-neutral-300 placeholder:text-neutral-300 focus:outline-none'
+            placeholder='Add a new bingo card quickly'
+            value={quickAdd}
+            onChange={(e) => setQuickAdd(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleQuickAdd()
+              }
+            }}
+          />
+          <p className='text-xs  text-neutral-300'>
+            Ex: name, number1, number2...
+          </p>
         </div>
 
-        {newCard.numbers.map((row, i) => (
-          <div
-            key={`row-${i}}`}
-            className='flex w-full flex-row justify-between'
-          >
-            {row.map((_, j) => (
-              <input
-                aria-label={`New card number col ${i} row ${j}`}
-                role='textbox'
-                name={`new-card-number-input-${i}-${j}`}
-                key={`col-${j}`}
-                type='text'
-                className='w-8 border border-gray-300 text-center'
-                value={newCard.numbers[i][j].number}
-                disabled={i === 2 && j === 2}
-                onChange={(e) => {
-                  const newNumbers = [...newCard.numbers]
-                  newNumbers[i][j].number = e.target.value
-                  setNewCard({ ...newCard, numbers: newNumbers })
-                }}
-              />
-            ))}
-          </div>
-        ))}
+        <Button
+          className='rounded-md bg-black px-4 py-2 text-white'
+          onClick={handleQuickAdd}
+        >
+          Add
+        </Button>
       </div>
     </div>
   )

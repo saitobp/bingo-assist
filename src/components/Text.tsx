@@ -11,7 +11,7 @@ export function Text(props: TextProps) {
     return (
       <h1
         {...props}
-        className={clsx(props.className, 'text-lg font-bold text-gray-600')}
+        className={clsx(props.className, 'text-lg font-bold text-neutral-800')}
       >
         {props.children}
       </h1>
@@ -22,7 +22,7 @@ export function Text(props: TextProps) {
     return (
       <h2
         {...props}
-        className={clsx(props.className, 'text-md font-bold text-gray-600')}
+        className={clsx(props.className, 'text-md font-bold text-neutral-800')}
       >
         {props.children}
       </h2>
