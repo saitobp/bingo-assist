@@ -133,7 +133,7 @@ export function Bingo() {
       .map((v) => ({ number: v.trim(), checked: false }))
 
     if (n.length !== 24) {
-      alert('Invalid number of inputs')
+      alert(`Invalid number of input, expected 24 numbers but got ${n.length}.`)
       return
     }
 
