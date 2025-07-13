@@ -194,7 +194,7 @@ export function Bingo() {
         ))}
       </div>
 
-      <div className='mt-4 flex w-96 items-end gap-2'>
+      <div className='mt-4 flex w-full items-end gap-2 md:w-96'>
         <div className='flex w-full flex-col gap-2'>
           <label>Quick Add</label>
           <input
