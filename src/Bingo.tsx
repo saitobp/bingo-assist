@@ -1,5 +1,5 @@
 import { BingoCard } from '@/components/BingoCard'
-import { Button } from '@/components/button'
+import { Button } from '@/components/Button'
 import { DrawnNumbers } from '@/components/DrawnNumbers'
 import { Text } from '@/components/Text'
 import { WinnerCardIndicator } from '@/components/WinnerCardIndicator'
